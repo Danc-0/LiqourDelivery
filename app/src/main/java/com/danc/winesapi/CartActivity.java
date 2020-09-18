@@ -68,6 +68,7 @@ public class CartActivity extends AppCompatActivity {
 //                id.add(cursor.getString(0));
 //                productActivity.item_count.setText(cursor.getCount());
                 title.add(cursor.getString(1));
+                images.add(cursor.getString(2));
                 price.add(cursor.getString(3));
                 description.add(cursor.getString(4));
                 quantity.add(cursor.getString(5));

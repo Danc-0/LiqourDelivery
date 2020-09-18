@@ -55,8 +55,8 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartVi
         holder.price.setText(String.valueOf(price.get(position)));
         holder.initialPrice.setText(String.valueOf(originalPrice.get(position)));
         holder.quantity.setText(String.valueOf(quantity.get(position)));
-//        Log.d(TAG, "onBindViewHolder: Url " + imageUrl.get(position));
-//        Picasso.get().load(String.valueOf(imageUrl.get(position))).into(holder.image);
+
+        Picasso.get().load(String.valueOf(imageUrl.get(position))).into(holder.image);
     }
 
     @Override
