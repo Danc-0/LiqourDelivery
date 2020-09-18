@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:background="@drawable/grey_rounded_background"
+    android:layout_height="wrap_content"
+    android:layout_width="155dp"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:background="@drawable/grey_rounded_button"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <TextView
+            android:layout_centerVertical="true"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_width="wrap_content"
+            android:text="@string/dialog_quantity_title"
+            android:textColor="@color/Black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+
+        <RelativeLayout
+            android:id="@+id/close_dialog"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_width="wrap_content"
+            android:padding="10dp">
+
+            <ImageView
+                android:contentDescription="TODO"
+                android:layout_centerInParent="true"
+                android:layout_height="20dp"
+                android:layout_width="20dp"
+                android:src="@drawable/ic_x_black" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <ListView
+        android:entries="@array/quantity_array"
+        android:id="@+id/list_view"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
+
+    </ListView>
+
+</LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
