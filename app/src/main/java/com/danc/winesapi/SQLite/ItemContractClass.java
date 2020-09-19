@@ -21,9 +21,9 @@ public class ItemContractClass {
                         CartItemDetails._ID + " INTEGER PRIMARY KEY, " +
                         CartItemDetails.COLUMN_TITLE + " TEXT," +
                         CartItemDetails.COLUMN_IMAGE_URL + " TEXT," +
-                        CartItemDetails.COLUMN_PRICE + " TEXT," +
-                        CartItemDetails.COLUMN_ORIGINAL_PRICE + " TEXT," +
-                        CartItemDetails.COLUMN_QUANTITY + " TEXT)";
+                        CartItemDetails.COLUMN_PRICE + " INTEGER," +
+                        CartItemDetails.COLUMN_ORIGINAL_PRICE + " INTEGER," +
+                        CartItemDetails.COLUMN_QUANTITY + " INTEGER)";
 
 
         public static final String SQL_DELETE_TABLE =
@@ -32,6 +32,8 @@ public class ItemContractClass {
         public static final String QUERY_FROM_DB =
                 "SELECT * FROM " + CartItemDetails.TABLE_NAME;
 
+        public static final String QUERY_TOTAL_VALUES =
+                "SELECT SUM (" + CartItemDetails.COLUMN_PRICE + ") as Total FROM " + CartItemDetails.TABLE_NAME;
 
     }
 }

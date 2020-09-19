@@ -1,5 +1,7 @@
 package com.danc.winesapi.UIFragments;
 
+import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -12,8 +14,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.danc.winesapi.Adapter.ProductAdapter;
+import com.danc.winesapi.CartActivity;
 import com.danc.winesapi.Interfaces.ApiClient;
 import com.danc.winesapi.Interfaces.FragmentCommunication;
 import com.danc.winesapi.Models.Product;
@@ -33,14 +39,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Use the {@link MainFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = "MainFragment";
     Retrofit retrofit;
     ApiClient apiClient;
     RecyclerView recyclerView;
     ProductAdapter adapter;
     List<Product> products;
-
+    TextView item_count;
+    LinearLayout cart;
     CartItemOpenHelper mDb;
 
 
@@ -87,6 +94,8 @@ public class MainFragment extends Fragment {
 
         adapter = new ProductAdapter(getContext());
 
+
+
     }
 
     @Override
@@ -94,11 +103,19 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main, container, false);
+
+        item_count = view.findViewById(R.id.item_count);
+        cart = view.findViewById(R.id.cart);
+        cart.setOnClickListener(this);
+
+        mDb = new CartItemOpenHelper(getContext());
+
         recyclerView = view.findViewById(R.id.recycler_view);
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(layoutManager);
 
         setData();
+        getAllData();
         return view;
     }
 
@@ -126,4 +143,33 @@ public class MainFragment extends Fragment {
         });
     }
 
+    void getAllData() {
+        Cursor cursor = mDb.readAllData();
+        if (cursor.getCount() == 0) {
+            item_count.setVisibility(View.INVISIBLE);
+            Toast.makeText(getContext(), "Failed to Fetch the data", Toast.LENGTH_SHORT).show();
+
+        } else {
+            while (cursor.moveToNext()) {
+                Log.d(TAG, "getAllData: Number of items " + cursor.getCount());
+                Toast.makeText(getContext(), "Number of Items " + cursor.getCount(), Toast.LENGTH_SHORT).show();
+                item_count.setText(String.valueOf(cursor.getCount()));
+            }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getAllData();
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.cart:
+                Intent intent = new Intent(getActivity(), CartActivity.class);
+                startActivity(intent);
+        }
+    }
 };

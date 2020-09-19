@@ -38,7 +38,7 @@ public class ProductActivity extends AppCompatActivity implements View.OnClickLi
 
     CartItemOpenHelper mDb;
 
-    public TextView item_count;
+    TextView item_count;
     LinearLayout Cart;
 
     @Override

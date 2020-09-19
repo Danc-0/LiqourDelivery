@@ -5,19 +5,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.danc.winesapi.Adapter.CartItemAdapter;
 import com.danc.winesapi.SQLite.CartItemOpenHelper;
-import com.danc.winesapi.SQLite.ItemContractClass;
-import com.danc.winesapi.SQLite.ItemContractClass.CartItemDetails;
 
 import java.util.ArrayList;
-
-import static com.danc.winesapi.SQLite.ItemContractClass.CartItemDetails.*;
 
 public class CartActivity extends AppCompatActivity {
 
@@ -28,7 +25,7 @@ public class CartActivity extends AppCompatActivity {
     ArrayList<String> title, images, price, description, quantity;
     CartItemAdapter adapter;
 
-    ProductActivity productActivity;
+    TextView amount_total;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +40,8 @@ public class CartActivity extends AppCompatActivity {
         description = new ArrayList<>();
         quantity = new ArrayList<>();
 
+        amount_total = findViewById(R.id.amount_total);
+
         getAllData();
 
         recyclerView = findViewById(R.id.recyclerv_view);
@@ -52,6 +51,8 @@ public class CartActivity extends AppCompatActivity {
 
         adapter = new CartItemAdapter(this, title, images, price, description, quantity);
         recyclerView.setAdapter(adapter);
+
+        getTotals();
 
 
     }
@@ -65,6 +66,7 @@ public class CartActivity extends AppCompatActivity {
             while (cursor.moveToNext()) {
                 Log.d(TAG, "getAllData: Number of items " + cursor.getCount());
                 Toast.makeText(this, "Number of Items " + cursor.getCount(), Toast.LENGTH_SHORT).show();
+//                getTotals();
 //                id.add(cursor.getString(0));
 //                productActivity.item_count.setText(cursor.getCount());
                 title.add(cursor.getString(1));
@@ -75,5 +77,19 @@ public class CartActivity extends AppCompatActivity {
 
             }
         }
+    }
+
+    int getTotals() {
+        Cursor cursor = mDb.calculateTotals();
+        int total = 0;
+        if (cursor.moveToFirst()) {
+            total = cursor.getInt(cursor.getColumnIndex("Total"));
+            Log.d(TAG, "getTotals: TotalValue " + total);
+            amount_total.setText(String.valueOf(total));
+        } else {
+            amount_total.setText(String.valueOf(0));
+            amount_total.setVisibility(View.INVISIBLE);
+        }
+        return total;
     }
 }
