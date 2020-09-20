@@ -36,7 +36,7 @@ public class CartItemOpenHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public Cursor calculateTotals(){
+    public Cursor calculatePriceTotals(){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
         if (db != null){
@@ -44,4 +44,14 @@ public class CartItemOpenHelper extends SQLiteOpenHelper {
         }
         return cursor;
     }
+
+    public Cursor calculateQuantityTotals(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = null;
+        if (db != null){
+            cursor = db.rawQuery(ItemContractClass.CartItemDetails.QUERY_TOTAL_QUANTITY_VALUES, null);
+        }
+        return cursor;
+    }
+
 }

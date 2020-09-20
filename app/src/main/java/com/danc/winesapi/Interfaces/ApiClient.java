@@ -1,5 +1,7 @@
 package com.danc.winesapi.Interfaces;
 
+import android.util.Log;
+
 import com.danc.winesapi.Models.LoginUser;
 import com.danc.winesapi.Models.Product;
 import com.danc.winesapi.Models.RegisterUser;
@@ -27,13 +29,9 @@ public interface ApiClient {
     );
 
     @POST("api/user/login/")
-    Call<Void> loginNewUser (
-            @Field("email") String email,
-            @Field("password") String password
+    Call<LoginUser> loginNewUser (@Body LoginUser loginUser);
 
-    );
-
-    @GET("api/user/register/")
+    @POST("api/user/register/")
     Call<LoginUser> userLogin(@Body LoginUser loginUser);
 
     @POST("api/user/register/")

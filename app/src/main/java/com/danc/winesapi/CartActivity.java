@@ -4,19 +4,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.danc.winesapi.Adapter.CartItemAdapter;
+import com.danc.winesapi.Mpesa.Mpesa2Activity;
+
 import com.danc.winesapi.SQLite.CartItemOpenHelper;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
-public class CartActivity extends AppCompatActivity {
+public class CartActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "CartActivity";
     RecyclerView recyclerView;
@@ -25,7 +30,9 @@ public class CartActivity extends AppCompatActivity {
     ArrayList<String> title, images, price, description, quantity;
     CartItemAdapter adapter;
 
-    TextView amount_total;
+    TextView amount_total, amount_quantity;
+    String regex = "^.*[\\(\\)].*$";
+    RelativeLayout proceedToCheckout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +48,9 @@ public class CartActivity extends AppCompatActivity {
         quantity = new ArrayList<>();
 
         amount_total = findViewById(R.id.amount_total);
+        amount_quantity = findViewById(R.id.amount_quantity);
+        proceedToCheckout = findViewById(R.id.proceed_to_checkout);
+        proceedToCheckout.setOnClickListener(this);
 
         getAllData();
 
@@ -52,7 +62,7 @@ public class CartActivity extends AppCompatActivity {
         adapter = new CartItemAdapter(this, title, images, price, description, quantity);
         recyclerView.setAdapter(adapter);
 
-        getTotals();
+        getPriceTotals();
 
 
     }
@@ -66,7 +76,7 @@ public class CartActivity extends AppCompatActivity {
             while (cursor.moveToNext()) {
                 Log.d(TAG, "getAllData: Number of items " + cursor.getCount());
                 Toast.makeText(this, "Number of Items " + cursor.getCount(), Toast.LENGTH_SHORT).show();
-//                getTotals();
+                getQuantityTotals();
 //                id.add(cursor.getString(0));
 //                productActivity.item_count.setText(cursor.getCount());
                 title.add(cursor.getString(1));
@@ -79,17 +89,60 @@ public class CartActivity extends AppCompatActivity {
         }
     }
 
-    int getTotals() {
-        Cursor cursor = mDb.calculateTotals();
+    int getPriceTotals() {
+        Cursor cursor = mDb.calculatePriceTotals();
         int total = 0;
         if (cursor.moveToFirst()) {
             total = cursor.getInt(cursor.getColumnIndex("Total"));
             Log.d(TAG, "getTotals: TotalValue " + total);
+
+            Pattern pattern = Pattern.compile(regex);
+//            Matcher matcher = pattern.matcher();
             amount_total.setText(String.valueOf(total));
         } else {
             amount_total.setText(String.valueOf(0));
             amount_total.setVisibility(View.INVISIBLE);
         }
         return total;
+    }
+
+    int getQuantityTotals() {
+        Cursor cursor = mDb.calculateQuantityTotals();
+        int total = 0;
+        if (cursor.moveToFirst()) {
+            total = cursor.getInt(cursor.getColumnIndex("Total"));
+            Log.d(TAG, "getTotals: TotalValue " + total);
+            amount_quantity.setText(String.valueOf(total));
+        } else {
+            amount_quantity.setText(String.valueOf(0));
+            amount_quantity.setVisibility(View.INVISIBLE);
+        }
+        return total;
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.proceed_to_checkout:
+                launchPurchaseFragment();
+                Intent intent = new Intent(this, Mpesa2Activity.class);
+                startActivity(intent);
+                break;
+        }
+    }
+
+//    void launchPurchaseFragment(){
+//        String totalPrice = amount_total.getText().toString();
+//        Intent intent = new Intent(this, Mpesa2Activity.class);
+//        intent.putExtra("TotalAmount", totalPrice);
+//        startActivity(intent);
+//    }
+
+    private void launchPurchaseFragment() {
+        String Amount = amount_total.getText().toString();
+        Intent intent = new Intent(this, Mpesa2Activity.class);
+        intent.putExtra("Amount", Amount);
+        startActivity(intent);
+
     }
 }

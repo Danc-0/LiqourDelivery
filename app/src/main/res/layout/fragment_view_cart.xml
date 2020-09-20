@@ -68,7 +68,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="100"
+                        android:text="@string/cart_subtotal"
+                        android:layout_marginEnd="2dp"
                         android:textColor="@color/Black"
                         android:textSize="16sp" />
 
@@ -76,6 +77,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="30"
+                        android:id="@+id/amount_quantity"
                         android:textColor="@color/Black"
                         android:textSize="16sp" />
 
@@ -106,7 +108,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
-                        android:text="@{@string/proceed_to_checkout}"
+                        android:text="@string/proceed_to_checkout"
                         android:textColor="@color/Black"
                         android:textSize="14sp" />
 

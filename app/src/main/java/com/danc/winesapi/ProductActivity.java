@@ -30,12 +30,7 @@ import retrofit2.Retrofit;
 public class ProductActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "MainActivity";
 
-    Retrofit retrofit;
-    ApiClient apiClient;
     RecyclerView recyclerView;
-    ProductAdapter adapter;
-    List<Product> products;
-
     CartItemOpenHelper mDb;
 
     TextView item_count;
@@ -54,7 +49,7 @@ public class ProductActivity extends AppCompatActivity implements View.OnClickLi
         mDb = new CartItemOpenHelper(this);
 
         init();
-        getAllData();
+//        getAllData();
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("INTENT_NAME"));
 
@@ -78,24 +73,24 @@ public class ProductActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onResume() {
         super.onResume();
-        getAllData();
+//        getAllData();
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("INTENT_NAME"));
     }
 
-    void getAllData() {
-        Cursor cursor = mDb.readAllData();
-        if (cursor.getCount() == 0) {
-            item_count.setVisibility(View.INVISIBLE);
-            Toast.makeText(this, "Failed to Fetch the data", Toast.LENGTH_SHORT).show();
-
-        } else {
-            while (cursor.moveToNext()) {
-                Log.d(TAG, "getAllData: Number of items " + cursor.getCount());
-                Toast.makeText(this, "Number of Items " + cursor.getCount(), Toast.LENGTH_SHORT).show();
-                item_count.setText(String.valueOf(cursor.getCount()));
-            }
-        }
-    }
+//    void getAllData() {
+//        Cursor cursor = mDb.readAllData();
+//        if (cursor.getCount() == 0) {
+////            item_count.setVisibility(View.INVISIBLE);
+//            Toast.makeText(this, "Failed to Fetch the data", Toast.LENGTH_SHORT).show();
+//
+//        } else {
+//            while (cursor.moveToNext()) {
+//                Log.d(TAG, "getAllData: Number of items " + cursor.getCount());
+//                Toast.makeText(this, "Number of Items " + cursor.getCount(), Toast.LENGTH_SHORT).show();
+//                item_count.setText(String.valueOf(cursor.getCount()));
+//            }
+//        }
+//    }
 
     @Override
     public void onClick(View view) {
@@ -106,4 +101,5 @@ public class ProductActivity extends AppCompatActivity implements View.OnClickLi
             break;
         }
     }
+
 }

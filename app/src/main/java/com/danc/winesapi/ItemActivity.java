@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.danc.winesapi.Models.Product;
+import com.danc.winesapi.Mpesa.Mpesa2Activity;
 import com.danc.winesapi.SQLite.CartItemOpenHelper;
 import com.danc.winesapi.SQLite.ItemContractClass;
 import com.squareup.picasso.Picasso;
@@ -46,10 +47,11 @@ public class ItemActivity extends AppCompatActivity implements View.OnClickListe
     String cartItemImage;
     public int count = 0;
 
-    int totalCount;
+    int totalCount = 0;
     CartItemOpenHelper mDb;
 
     LinearLayout cart;
+    int value;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,10 +79,12 @@ public class ItemActivity extends AppCompatActivity implements View.OnClickListe
         cart = findViewById(R.id.cart);
         cart.setOnClickListener(this::onClick);
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("INTENT_NAME"));
-
         getSelectedData();
         getAllData();
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("INTENT_NAME"));
+
+
     }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -124,7 +128,6 @@ public class ItemActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.add_to_cart:
                 Toast.makeText(this, "Added to Cart", Toast.LENGTH_SHORT).show();
                 InsertIntoSQLiteDB();
-                addToCounter();
                 break;
 
             case R.id.quantity_button:
@@ -145,6 +148,8 @@ public class ItemActivity extends AppCompatActivity implements View.OnClickListe
         int originalPrice = Integer.parseInt(productOriginalPrice.getText().toString().trim());
         int quantity = Integer.parseInt(productQuantity.getText().toString().trim());
 
+        int totalPerItem = price * quantity;
+
         CartItemOpenHelper dbOpenHelper = new CartItemOpenHelper(ItemActivity.this);
         SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -153,39 +158,39 @@ public class ItemActivity extends AppCompatActivity implements View.OnClickListe
         values.put(ItemContractClass.CartItemDetails.COLUMN_PRICE, price);
         values.put(ItemContractClass.CartItemDetails.COLUMN_ORIGINAL_PRICE, originalPrice);
         values.put(ItemContractClass.CartItemDetails.COLUMN_QUANTITY, quantity);
+        values.put(ItemContractClass.CartItemDetails.COLUMN_EACH_TOTAL, totalPerItem);
 
         long newRowID = db.insert(TABLE_NAME, null, values);
 
         if (newRowID == -1) {
-            Log.d(TAG, "insertData: Row Id: " + newRowID);
             return false;
 
         } else {
             Toast.makeText(this, "Data Inserted Successful", Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "insertData: Data Inserted Successfully");
+            addToCounter();
             return true;
         }
 
     }
 
     public void addToCounter() {
-        if (itemCount == null){
+        value = Integer.parseInt(itemCount.getText().toString());
+        value++;
+        if (value == 0) {
             itemCount.setVisibility(View.INVISIBLE);
         } else {
-            totalCount = Integer.parseInt(itemCount.getText().toString());
-            totalCount += 1;
-            itemCount.setText(String.valueOf(totalCount));
-            sentAmount();
+            itemCount.setText(String.valueOf(value));
+//            sentAmount();
         }
     }
 
     void getAllData() {
         Cursor cursor = mDb.readAllData();
         if (cursor.getCount() == 0) {
-            itemCount.setVisibility(View.INVISIBLE);
             Toast.makeText(this, "Failed to Fetch the data", Toast.LENGTH_SHORT).show();
 
-        } else {
+        } else if (value == 0) {
+//            itemCount.setVisibility(View.INVISIBLE);
             while (cursor.moveToNext()) {
                 Log.d(TAG, "getAllData: Number of items " + cursor.getCount());
                 Toast.makeText(this, "Number of Items " + cursor.getCount(), Toast.LENGTH_SHORT).show();
@@ -193,11 +198,12 @@ public class ItemActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
-    public void sentAmount(){
-        String NumberItem = (String) String.valueOf(totalCount);
-        Intent intent = new Intent("INTENT_NAME");
-        intent.putExtra("Item Position", NumberItem);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 
-    }
+//    public void sentAmount() {
+//        String NumberItem = (String) String.valueOf(totalCount);
+//        Intent intent = new Intent("INTENT_NAME");
+//        intent.putExtra("TotalCount", NumberItem);
+//        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+//
+//    }
 }

@@ -14,26 +14,38 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".CartActivity"
-            android:label="Wines And Spirit"
-            android:parentActivityName=".ItemActivity">
-        </activity>
-        <activity android:name=".ItemActivity"
-            android:label="Wines And Spirit"
-            android:parentActivityName=".ProductActivity">
-        </activity>
-        <activity android:name=".ProductActivity">
+
+        <activity android:name=".Auth.WelcomeAndAuth.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".WelcomeAndAuth.WelcomeActivity">
+
+        <activity android:name=".Auth.WelcomeAndAuth.Register" />
+
+        <activity android:name=".Auth.WelcomeAndAuth.LogIn" />
+
+        <activity android:name=".ProductActivity">
 
         </activity>
-        <activity android:name=".WelcomeAndAuth.SignIn" />
-        <activity android:name=".WelcomeAndAuth.SignUp" />
+
+        <activity android:name=".Mpesa.Mpesa2Activity"/>
+        <activity
+            android:name=".CartActivity"
+            android:label="Wines And Spirit"
+            android:parentActivityName=".ItemActivity">
+
+        </activity>
+
+        <activity
+            android:name=".ItemActivity"
+            android:label="Wines And Spirit"
+            android:parentActivityName=".ProductActivity">
+
+        </activity>
+
     </application>
 
 </manifest>

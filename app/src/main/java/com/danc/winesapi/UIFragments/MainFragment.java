@@ -146,7 +146,6 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     void getAllData() {
         Cursor cursor = mDb.readAllData();
         if (cursor.getCount() == 0) {
-            item_count.setVisibility(View.INVISIBLE);
             Toast.makeText(getContext(), "Failed to Fetch the data", Toast.LENGTH_SHORT).show();
 
         } else {
