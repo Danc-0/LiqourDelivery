@@ -2,6 +2,7 @@ package com.danc.winesapi.UIFragments;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -87,7 +88,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         super.onCreate(savedInstanceState);
 
         retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.0.12:8000/")
+                .baseUrl(getString(R.string.base_url))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         apiClient = retrofit.create(ApiClient.class);
@@ -169,6 +170,16 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             case R.id.cart:
                 Intent intent = new Intent(getActivity(), CartActivity.class);
                 startActivity(intent);
+                recyclerView.removeAllViewsInLayout();
         }
+    }
+
+    public boolean deleteAll(){
+        Cursor cursor = mDb.clearSQLite();
+
+        if (cursor.moveToFirst()){
+            return true;
+        }
+        return false;
     }
 };

@@ -39,5 +39,8 @@ public class ItemContractClass {
 
         public static final String QUERY_TOTAL_QUANTITY_VALUES =
                 "SELECT SUM (" + CartItemDetails.COLUMN_QUANTITY + ") as Total FROM " + CartItemDetails.TABLE_NAME;
+
+        public static final String CLEAR_DB =
+                "DELETE * FROM " + CartItemDetails.TABLE_NAME;
     }
 }

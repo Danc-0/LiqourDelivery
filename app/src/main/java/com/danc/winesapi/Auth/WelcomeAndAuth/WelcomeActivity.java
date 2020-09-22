@@ -52,9 +52,10 @@ public class WelcomeActivity extends AppCompatActivity {
         viewPager =  findViewById(R.id.view_pager);
         dotsLayout =  findViewById(R.id.layoutDots);
         btnSkip =  findViewById(R.id.btn_skip);
-        btnNext =  findViewById(R.id.btn_next);
+//        btnNext =  findViewById(R.id.btn_next);
         btnSignUp = findViewById(R.id.btn_signUp);
 
+        btnSignUp.setText(getString(R.string.start));
 
         // layouts of all welcome sliders
         // add few more layouts if you want
@@ -81,20 +82,20 @@ public class WelcomeActivity extends AppCompatActivity {
             }
         });
 
-        btnNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // checking for last page
-                // if last page home screen will be launched
-                int current = getItem(+1);
-                if (current < layouts.length) {
-                    // move to next screen
-                    viewPager.setCurrentItem(current);
-                } else {
-                    launchSignInScreen();
-                }
-            }
-        });
+//        btnNext.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // checking for last page
+//                // if last page home screen will be launched
+//                int current = getItem(+1);
+//                if (current < layouts.length) {
+//                    // move to next screen
+//                    viewPager.setCurrentItem(current);
+//                } else {
+//                    launchSignInScreen();
+//                }
+//            }
+//        });
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,13 +155,14 @@ public class WelcomeActivity extends AppCompatActivity {
             // changing the next button text 'NEXT' / 'GOT IT'
             if (position == layouts.length - 1) {
                 // last page. make button text to GOT IT
-                btnNext.setText(getString(R.string.start));
+//                btnNext.setText(getString(R.string.start));
                 btnSkip.setVisibility(View.GONE);
                 btnSignUp.setText(getString(R.string.end));
             } else {
                 // still pages are left
-                btnNext.setText(getString(R.string.next));
+//                btnNext.setText(getString(R.string.next));
                 btnSignUp.setVisibility(View.VISIBLE);
+                btnSignUp.setText(getString(R.string.end));
             }
         }
 

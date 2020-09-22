@@ -127,22 +127,26 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
                 launchPurchaseFragment();
                 Intent intent = new Intent(this, Mpesa2Activity.class);
                 startActivity(intent);
+                deleteAll();
                 break;
         }
     }
-
-//    void launchPurchaseFragment(){
-//        String totalPrice = amount_total.getText().toString();
-//        Intent intent = new Intent(this, Mpesa2Activity.class);
-//        intent.putExtra("TotalAmount", totalPrice);
-//        startActivity(intent);
-//    }
 
     private void launchPurchaseFragment() {
         String Amount = amount_total.getText().toString();
         Intent intent = new Intent(this, Mpesa2Activity.class);
         intent.putExtra("Amount", Amount);
         startActivity(intent);
+        finish();
 
+    }
+
+    public boolean deleteAll(){
+        Cursor cursor = mDb.clearSQLite();
+
+        if (cursor.moveToFirst()){
+            return true;
+        }
+        return false;
     }
 }

@@ -28,16 +28,17 @@ public interface ApiClient {
 
     );
 
-    @POST("api/user/login/")
-    Call<LoginUser> loginNewUser (@Body LoginUser loginUser);
-
-    @POST("api/user/register/")
-    Call<LoginUser> userLogin(@Body LoginUser loginUser);
-
     @POST("api/user/register/")
     Call<RegisterUser> userRegistration (@Body RegisterUser registerUser);
 
+    @POST("api/user/login/")
+    Call<LoginUser> loginNewUser (@Body LoginUser loginUser);
+
     @GET("api/products/")
     Call<List<Product>> getProducts();
+
+    @POST("api/checkout/")
+    Call<LoginUser> checkingOut(@Body Product product);
+
 
 }

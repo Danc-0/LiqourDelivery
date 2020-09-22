@@ -102,7 +102,7 @@ public class ItemActivity extends AppCompatActivity implements View.OnClickListe
         if (selectedProduct == null) {
             selectedProduct = new Product();
         }
-        String imageUrlHead = "http://192.168.0.12:8000";
+        String imageUrlHead = getString(R.string.base_url);
         cartItemImage = imageUrlHead + selectedProduct.getImageUrl();
 
         this.product = selectedProduct;
@@ -180,17 +180,15 @@ public class ItemActivity extends AppCompatActivity implements View.OnClickListe
             itemCount.setVisibility(View.INVISIBLE);
         } else {
             itemCount.setText(String.valueOf(value));
-//            sentAmount();
         }
     }
 
     void getAllData() {
         Cursor cursor = mDb.readAllData();
         if (cursor.getCount() == 0) {
-            Toast.makeText(this, "Failed to Fetch the data", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please Wait", Toast.LENGTH_SHORT).show();
 
         } else if (value == 0) {
-//            itemCount.setVisibility(View.INVISIBLE);
             while (cursor.moveToNext()) {
                 Log.d(TAG, "getAllData: Number of items " + cursor.getCount());
                 Toast.makeText(this, "Number of Items " + cursor.getCount(), Toast.LENGTH_SHORT).show();
@@ -199,11 +197,9 @@ public class ItemActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-//    public void sentAmount() {
-//        String NumberItem = (String) String.valueOf(totalCount);
-//        Intent intent = new Intent("INTENT_NAME");
-//        intent.putExtra("TotalCount", NumberItem);
-//        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-//
-//    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }
