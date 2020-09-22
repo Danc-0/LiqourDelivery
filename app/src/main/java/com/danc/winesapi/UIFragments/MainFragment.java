@@ -173,13 +173,4 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 recyclerView.removeAllViewsInLayout();
         }
     }
-
-    public boolean deleteAll(){
-        Cursor cursor = mDb.clearSQLite();
-
-        if (cursor.moveToFirst()){
-            return true;
-        }
-        return false;
-    }
 };

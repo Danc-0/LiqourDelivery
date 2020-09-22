@@ -4,12 +4,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 public class CartItemOpenHelper extends SQLiteOpenHelper {
 
+    private static final String TAG = "CartItemOpenHelper";
     public static final String DATABASE_NAME = "CartItems.db";
     public static final int DATABASE_VERSION = 5;
     Context context;
@@ -38,42 +40,44 @@ public class CartItemOpenHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public Cursor calculatePriceTotals(){
+    public Cursor calculatePriceTotals() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
-        if (db != null){
+        if (db != null) {
             cursor = db.rawQuery(ItemContractClass.CartItemDetails.QUERY_TOTAL_VALUES, null);
         }
         return cursor;
     }
 
-    public Cursor calculateQuantityTotals(){
+    public Cursor calculateQuantityTotals() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
-        if (db != null){
+        if (db != null) {
             cursor = db.rawQuery(ItemContractClass.CartItemDetails.QUERY_TOTAL_QUANTITY_VALUES, null);
         }
         return cursor;
     }
 
-    public Cursor clearSQLite(){
+    public Cursor clearSQLite() {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         Cursor cursor = null;
-        if (sqLiteDatabase != null){
+        if (sqLiteDatabase != null) {
             cursor = sqLiteDatabase.rawQuery(ItemContractClass.CartItemDetails.CLEAR_DB, null);
 
         }
         return cursor;
     }
 
-    void deleteOneRow(String row_id) {
+    public void deleteOneRow(String row_id) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         long result = sqLiteDatabase.delete(ItemContractClass.CartItemDetails.TABLE_NAME, "_id=?", new String[]{row_id});
 
         if (result == -1) {
-            Toast.makeText(context, "Failed to Delete", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "deleteOneRow: Failed to Delete");
+
         } else {
-            Toast.makeText(context, "Deleted Successfully", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "deleteOneRow: Successfully deleted");
+
         }
     }
 }

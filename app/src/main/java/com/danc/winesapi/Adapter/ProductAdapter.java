@@ -60,7 +60,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         Product product = products.get(position);
         holder.bindData(product);
-        String imageUrlHead = "http://192.168.0.12:8000";
+        String imageUrlHead = holder.itemView.getContext().getString(R.string.base_url);
         Picasso.get().load(imageUrlHead + product.getImageUrl()).into(holder.productImage);
 
     }
@@ -115,14 +115,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             intent.putExtra("SelectedProduct", product);
             Log.d(TAG, "onClick: SelectedProduct " + product);
             context.startActivity(intent);
-
-
-//            AppCompatActivity appCompatActivity = (AppCompatActivity) view.getContext();
-//            ItemFragment itemFragment = new ItemFragment();
-//            FragmentTransaction transaction = appCompatActivity.getSupportFragmentManager().beginTransaction();
-//            transaction.replace(R.id.main_container, itemFragment);
-//            transaction.addToBackStack(null);
-//            transaction.commit();
 
         }
     }

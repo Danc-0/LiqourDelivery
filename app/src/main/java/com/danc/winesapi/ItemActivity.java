@@ -102,11 +102,11 @@ public class ItemActivity extends AppCompatActivity implements View.OnClickListe
         if (selectedProduct == null) {
             selectedProduct = new Product();
         }
-        String imageUrlHead = getString(R.string.base_url);
-        cartItemImage = imageUrlHead + selectedProduct.getImageUrl();
-
         this.product = selectedProduct;
 //        itemId = selectedProduct.getId();
+
+        String imageUrlHead = getString(R.string.base_url);
+        cartItemImage = imageUrlHead + selectedProduct.getImageUrl();
         productTitle.setText(selectedProduct.getProductName());
 
         Picasso.get().load(cartItemImage).into(productImage);

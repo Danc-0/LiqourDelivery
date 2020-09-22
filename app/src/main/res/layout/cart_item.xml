@@ -93,26 +93,16 @@
                     android:layout_marginTop="5dp"
                     />
 
-<!--                <TextView-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_weight="0.27"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="Total Price:"-->
-<!--                    android:textColor="@color/Black"-->
-<!--                    android:textSize="15sp"-->
-<!--                    android:layout_marginTop="5dp"-->
-<!--                    />-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_weight="0.3"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:id="@+id/total_amount"-->
-<!--                    android:text="15"-->
-<!--                    android:textColor="@color/Black"-->
-<!--                    android:textSize="15sp"-->
-<!--                    android:layout_marginTop="5dp"-->
-<!--                    />-->
+                <TextView
+                    android:id="@+id/itemId"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.27"
+                    android:layout_height="wrap_content"
+                    android:text="id"
+                    android:textColor="@color/Black"
+                    android:textSize="15sp"
+                    android:layout_marginTop="5dp"
+                    />
 
             </LinearLayout>
 
@@ -138,6 +128,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
+            android:id="@+id/delete_item"
+            android:background="@drawable/grey_rounded_button">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/delete"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_marginTop="2dp"
             android:id="@+id/increase_quantity"
             android:background="@drawable/grey_rounded_button">
 

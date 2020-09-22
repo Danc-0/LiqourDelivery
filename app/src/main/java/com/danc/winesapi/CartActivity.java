@@ -27,12 +27,13 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
     RecyclerView recyclerView;
 
     CartItemOpenHelper mDb;
-    ArrayList<String> title, images, price, description, quantity;
+    ArrayList<String> id, title, images, price, description, quantity;
+    String itemId;
     CartItemAdapter adapter;
 
     TextView amount_total, amount_quantity;
-    String regex = "^.*[\\(\\)].*$";
     RelativeLayout proceedToCheckout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +41,7 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.fragment_view_cart);
 
         mDb = new CartItemOpenHelper(this);
-//        id = new ArrayList<>();
+        id = new ArrayList<>();
         title = new ArrayList<>();
         images = new ArrayList<>();
         price = new ArrayList<>();
@@ -59,7 +60,7 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new CartItemAdapter(this, title, images, price, description, quantity);
+        adapter = new CartItemAdapter(this,id, title, images, price, description, quantity);
         recyclerView.setAdapter(adapter);
 
         getPriceTotals();
@@ -77,8 +78,7 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
                 Log.d(TAG, "getAllData: Number of items " + cursor.getCount());
                 Toast.makeText(this, "Number of Items " + cursor.getCount(), Toast.LENGTH_SHORT).show();
                 getQuantityTotals();
-//                id.add(cursor.getString(0));
-//                productActivity.item_count.setText(cursor.getCount());
+                id.add(cursor.getString(0));
                 title.add(cursor.getString(1));
                 images.add(cursor.getString(2));
                 price.add(cursor.getString(3));
@@ -96,11 +96,8 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
             total = cursor.getInt(cursor.getColumnIndex("Total"));
             Log.d(TAG, "getTotals: TotalValue " + total);
 
-            Pattern pattern = Pattern.compile(regex);
-//            Matcher matcher = pattern.matcher();
             amount_total.setText(String.valueOf(total));
         } else {
-            amount_total.setText(String.valueOf(0));
             amount_total.setVisibility(View.INVISIBLE);
         }
         return total;
@@ -114,7 +111,6 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
             Log.d(TAG, "getTotals: TotalValue " + total);
             amount_quantity.setText(String.valueOf(total));
         } else {
-            amount_quantity.setText(String.valueOf(0));
             amount_quantity.setVisibility(View.INVISIBLE);
         }
         return total;
@@ -125,9 +121,6 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()){
             case R.id.proceed_to_checkout:
                 launchPurchaseFragment();
-                Intent intent = new Intent(this, Mpesa2Activity.class);
-                startActivity(intent);
-                deleteAll();
                 break;
         }
     }
@@ -141,12 +134,8 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    public boolean deleteAll(){
-        Cursor cursor = mDb.clearSQLite();
+    public void postCheckOut(){
+        CartItemOpenHelper mDb = new CartItemOpenHelper(this);
 
-        if (cursor.moveToFirst()){
-            return true;
-        }
-        return false;
     }
 }

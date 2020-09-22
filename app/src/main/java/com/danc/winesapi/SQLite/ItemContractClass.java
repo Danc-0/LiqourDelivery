@@ -42,5 +42,7 @@ public class ItemContractClass {
 
         public static final String CLEAR_DB =
                 "DELETE * FROM " + CartItemDetails.TABLE_NAME;
+
+
     }
 }

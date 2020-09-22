@@ -38,7 +38,12 @@ public interface ApiClient {
     Call<List<Product>> getProducts();
 
     @POST("api/checkout/")
-    Call<LoginUser> checkingOut(@Body Product product);
+    Call<Void> checkingOut(
+            @Field("Product") String Product,
+            @Field("User") String UserEmail,
+            @Field("Purchase Price") String purchasePrice,
+            @Field("Number of Items") String NumberOfItems
+    );
 
 
 }

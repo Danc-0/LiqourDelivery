@@ -1,6 +1,9 @@
 package com.danc.winesapi.Adapter;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.danc.winesapi.R;
+import com.danc.winesapi.SQLite.CartItemOpenHelper;
+import com.danc.winesapi.SQLite.ItemContractClass;
 import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
@@ -24,15 +29,17 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartVi
 
     private static final String TAG = "CartItemAdapter";
     private Context context;
-    private ArrayList title, imageUrl, price, originalPrice, quantity;
+    private ArrayList id, title, imageUrl, price, originalPrice, quantity;
 
     public CartItemAdapter(Context context,
+                           ArrayList id,
                            ArrayList title,
                            ArrayList imageUrl1,
                            ArrayList price,
                            ArrayList initialPrice,
                            ArrayList quantity) {
         this.context = context;
+        this.id = id;
         this.title = title;
         this.imageUrl = imageUrl1;
         this.price = price;
@@ -53,13 +60,13 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartVi
 
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
+        holder.itemId.setText(String.valueOf(id.get(position)));
         holder.title.setText(String.valueOf(title.get(position)));
         holder.price.setText(String.valueOf(price.get(position)));
         holder.initialPrice.setText(String.valueOf(originalPrice.get(position)));
         holder.quantity.setText(String.valueOf(quantity.get(position)));
         Picasso.get().load(String.valueOf(imageUrl.get(position))).into(holder.image);
 
-//        getTotalCost(Integer.parseInt(String.valueOf(quantity.get(position))), Integer.parseInt(String.valueOf(price.get(position))));
 
     }
 
@@ -70,28 +77,31 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartVi
 
     public class CartViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView title, price, initialPrice, quantity, totalPrice;
+        TextView itemId, title, price, initialPrice, quantity;
         ImageView image;
-        RelativeLayout increaseQuantity, decreaseQuantity;
+        RelativeLayout increaseQuantity, decreaseQuantity, deleteItem;
+        CartItemOpenHelper mDb = new CartItemOpenHelper(context);
+        String id;
 
         int currentQty;
-        int pricePerPiece;
 
         public CartViewHolder(@NonNull View itemView) {
             super(itemView);
 
             image = itemView.findViewById(R.id.image);
+            itemId = itemView.findViewById(R.id.itemId);
             title = itemView.findViewById(R.id.title);
             price = itemView.findViewById(R.id.price);
             initialPrice = itemView.findViewById(R.id.original_price);
             quantity = itemView.findViewById(R.id.quantity);
-//            totalPrice = itemView.findViewById(R.id.total_amount);
 
             increaseQuantity = itemView.findViewById(R.id.increase_quantity);
             decreaseQuantity = itemView.findViewById(R.id.decrease_quantity);
+            deleteItem = itemView.findViewById(R.id.delete_item);
 
             increaseQuantity.setOnClickListener(this);
             decreaseQuantity.setOnClickListener(this);
+            deleteItem.setOnClickListener(this);
 
         }
 
@@ -101,25 +111,71 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartVi
                 case R.id.increase_quantity:
                     currentQty = Integer.parseInt(quantity.getText().toString());
                     currentQty++;
+                    id = itemId.getText().toString();
                     quantity.setText(String.valueOf(currentQty));
+//                    updateDb(id);
                     break;
 
                 case R.id.decrease_quantity:
                     currentQty = Integer.parseInt(quantity.getText().toString());
-
-                    if (currentQty <= 1) {
+                    if (currentQty >= 0) {
                         quantity.setText(String.valueOf(currentQty));
-                    } else {
-                        currentQty--;
-                        quantity.setText(String.valueOf(currentQty));
-                        break;
+                        {
+                            currentQty--;
+                            if (currentQty == 0) {
+//                                deleteData();
+                                quantity.setVisibility(View.GONE);
+                            } else {
+//                                updateDb(id);
+                                quantity.setText(String.valueOf(currentQty));
+                                break;
+                            }
+                        }
                     }
+
+
             }
         }
-    }
+        private void deleteData() {
+            String id = itemId.getText().toString();
+            mDb.deleteOneRow(id);
 
-//    public void getTotalCost(int s1, int s2){
-//        int calculated = s1 * s2;
-//        totalPrice.setText(String.valueOf(calculated));
-//    }
+        }
+    }
 }
+
+//        public void updateDb(String row_id) {
+//            CartItemOpenHelper dbHelper = new CartItemOpenHelper(context);
+//            SQLiteDatabase sqLiteDatabase = dbHelper.getWritableDatabase();
+//            ContentValues contentValues = new ContentValues();
+//            contentValues.put(ItemContractClass.CartItemDetails.COLUMN_QUANTITY, String.valueOf(currentQty));
+//            sqLiteDatabase.update(ItemContractClass.CartItemDetails.TABLE_NAME, contentValues, "_id=?", new String[]{row_id});
+
+//            getQuantityTotals();
+////            getPriceTotals();
+//        }
+//
+//    }
+
+//    int getPriceTotals() {
+//        Cursor cursor = mDb.calculatePriceTotals();
+//        int total = 0;
+//        if (cursor.moveToFirst()) {
+//            total = cursor.getInt(cursor.getColumnIndex("Total"));
+//            Log.d(TAG, "getTotals: TotalValue " + total);
+//
+//        }
+//        return total;
+//    }
+//
+//    int getQuantityTotals() {
+//        Cursor cursor = mDb.calculateQuantityTotals();
+//        int total = 0;
+//        if (cursor.moveToFirst()) {
+//            total = cursor.getInt(cursor.getColumnIndex("Total"));
+//            Log.d(TAG, "getTotals: TotalValue " + total);
+//
+//        }
+//        return total;
+//    }
+
