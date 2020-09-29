@@ -13,7 +13,7 @@ public class CartItemOpenHelper extends SQLiteOpenHelper {
 
     private static final String TAG = "CartItemOpenHelper";
     public static final String DATABASE_NAME = "CartItems.db";
-    public static final int DATABASE_VERSION = 5;
+    public static final int DATABASE_VERSION = 6;
     Context context;
 
     public CartItemOpenHelper(@Nullable Context context) {

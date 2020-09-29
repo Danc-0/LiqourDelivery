@@ -1,11 +1,6 @@
 package com.danc.winesapi.Adapter;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.danc.winesapi.R;
 import com.danc.winesapi.SQLite.CartItemOpenHelper;
-import com.danc.winesapi.SQLite.ItemContractClass;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -81,7 +73,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartVi
         ImageView image;
         RelativeLayout increaseQuantity, decreaseQuantity, deleteItem;
         CartItemOpenHelper mDb = new CartItemOpenHelper(context);
-        String id;
+        
 
         int currentQty;
 
@@ -111,7 +103,6 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartVi
                 case R.id.increase_quantity:
                     currentQty = Integer.parseInt(quantity.getText().toString());
                     currentQty++;
-                    id = itemId.getText().toString();
                     quantity.setText(String.valueOf(currentQty));
 //                    updateDb(id);
                     break;

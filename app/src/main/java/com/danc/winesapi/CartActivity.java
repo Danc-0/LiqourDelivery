@@ -1,10 +1,9 @@
 package com.danc.winesapi;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,13 +12,26 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.danc.winesapi.Adapter.CartItemAdapter;
-import com.danc.winesapi.Mpesa.Mpesa2Activity;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.danc.winesapi.Adapter.CartItemAdapter;
+import com.danc.winesapi.Interfaces.ApiClient;
+import com.danc.winesapi.Models.CheckOut;
+import com.danc.winesapi.Models.OrderProducts;
+import com.danc.winesapi.Mpesa.Mpesa2Activity;
 import com.danc.winesapi.SQLite.CartItemOpenHelper;
 
 import java.util.ArrayList;
-import java.util.regex.Pattern;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class CartActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -33,6 +45,10 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
 
     TextView amount_total, amount_quantity;
     RelativeLayout proceedToCheckout;
+    ArrayList<String> product;
+
+    String userEmail;
+    ApiClient apiClient;
 
 
     @Override
@@ -60,30 +76,50 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new CartItemAdapter(this,id, title, images, price, description, quantity);
+        adapter = new CartItemAdapter(this, id, title, images, price, description, quantity);
         recyclerView.setAdapter(adapter);
 
+        Log.d(TAG, "onCreate: Adapter details: " + adapter);
         getPriceTotals();
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("INTENT_NAME"));
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(getString(R.string.base_url))
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        apiClient = retrofit.create(ApiClient.class);
 
 
     }
 
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            userEmail = intent.getStringExtra("User Email");
+
+        }
+    };
+
     void getAllData() {
         Cursor cursor = mDb.readAllData();
         if (cursor.getCount() == 0) {
-            Toast.makeText(this, "Failed to Fetch the data", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please wait: ", Toast.LENGTH_SHORT).show();
+
 
         } else {
             while (cursor.moveToNext()) {
-                Log.d(TAG, "getAllData: Number of items " + cursor.getCount());
-                Toast.makeText(this, "Number of Items " + cursor.getCount(), Toast.LENGTH_SHORT).show();
                 getQuantityTotals();
-                id.add(cursor.getString(0));
-                title.add(cursor.getString(1));
-                images.add(cursor.getString(2));
-                price.add(cursor.getString(3));
-                description.add(cursor.getString(4));
-                quantity.add(cursor.getString(5));
+                id.add(cursor.getString(1));
+                title.add(cursor.getString(2));
+                images.add(cursor.getString(3));
+                price.add(cursor.getString(4));
+                description.add(cursor.getString(5));
+                quantity.add(cursor.getString(6));
+
+                Log.d(TAG, "getAllData: I want this data: " + id);
+                Log.d(TAG, "getAllData: I want this data set: " + quantity);
 
             }
         }
@@ -118,9 +154,9 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.proceed_to_checkout:
-                launchPurchaseFragment();
+                productCheckOut();
                 break;
         }
     }
@@ -134,8 +170,31 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    public void postCheckOut(){
-        CartItemOpenHelper mDb = new CartItemOpenHelper(this);
+    public void productCheckOut(){
+        List<OrderProducts> products = new ArrayList<>();
+        products.add(new OrderProducts("id", "quantity"));
+        String email = "lunjalu@gmail.com";
 
+        CheckOut checkOut1 = new CheckOut(email, products);
+
+        Call<CheckOut> checkOut = apiClient.checkingOutOrder(checkOut1);
+        checkOut.enqueue(new Callback<CheckOut>() {
+            @Override
+            public void onResponse(Call<CheckOut> call, Response<CheckOut> response) {
+                if (!response.isSuccessful()){
+                    Log.d(TAG, "onResponse: Response Error: " + response.code());
+                    Toast.makeText(CartActivity.this, "Response Error please try again", Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
+//                    launchPurchaseFragment();
+                    Toast.makeText(CartActivity.this, "Request Successful: " + response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CheckOut> call, Throwable t) {
+                Toast.makeText(CartActivity.this, "Failed try again: ", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

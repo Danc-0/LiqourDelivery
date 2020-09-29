@@ -12,6 +12,7 @@ public class ItemContractClass {
         public static final String TABLE_NAME = "Cart_Item_Table";
         public static final String COLUMN_IMAGE_URL = "imageUrls";
         public static final String COLUMN_TITLE = "title";
+        public static final String COLUMN_ITEM_ID = "itemId";
         public static final String COLUMN_PRICE = "price";
         public static final String COLUMN_ORIGINAL_PRICE = "originalPrice";
         public static final String COLUMN_QUANTITY = "quantity";
@@ -20,6 +21,7 @@ public class ItemContractClass {
         public static final String SQL_CREATE_TABLE =
                 "CREATE TABLE " + CartItemDetails.TABLE_NAME + " (" +
                         CartItemDetails._ID + " INTEGER PRIMARY KEY, " +
+                        CartItemDetails.COLUMN_ITEM_ID + " TEXT, " +
                         CartItemDetails.COLUMN_TITLE + " TEXT," +
                         CartItemDetails.COLUMN_IMAGE_URL + " TEXT," +
                         CartItemDetails.COLUMN_PRICE + " INTEGER," +

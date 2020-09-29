@@ -40,6 +40,7 @@ public class ItemActivity extends AppCompatActivity implements View.OnClickListe
     TextView productQuantity;
     TextView itemCount;
     TextView numRates;
+    TextView item_id;
     RatingBar ratingBar;
     RelativeLayout addToCart, quantityBtn;
 
@@ -66,6 +67,7 @@ public class ItemActivity extends AppCompatActivity implements View.OnClickListe
         productPrice = findViewById(R.id.price);
         productOriginalPrice = findViewById(R.id.original_price);
         productQuantity = findViewById(R.id.quantity);
+        item_id = findViewById(R.id.item_id);
 
         itemCount = findViewById(R.id.item_count);
         mDb = new CartItemOpenHelper(this);
@@ -103,7 +105,8 @@ public class ItemActivity extends AppCompatActivity implements View.OnClickListe
             selectedProduct = new Product();
         }
         this.product = selectedProduct;
-//        itemId = selectedProduct.getId();
+        itemId = selectedProduct.getId();
+        item_id.setText(itemId);
 
         String imageUrlHead = getString(R.string.base_url);
         cartItemImage = imageUrlHead + selectedProduct.getImageUrl();
@@ -153,6 +156,7 @@ public class ItemActivity extends AppCompatActivity implements View.OnClickListe
         CartItemOpenHelper dbOpenHelper = new CartItemOpenHelper(ItemActivity.this);
         SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
+        values.put(ItemContractClass.CartItemDetails.COLUMN_ITEM_ID, itemId);
         values.put(ItemContractClass.CartItemDetails.COLUMN_TITLE, title);
         values.put(ItemContractClass.CartItemDetails.COLUMN_IMAGE_URL, imageUrl);
         values.put(ItemContractClass.CartItemDetails.COLUMN_PRICE, price);

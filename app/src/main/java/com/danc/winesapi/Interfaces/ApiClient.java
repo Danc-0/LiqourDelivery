@@ -2,10 +2,12 @@ package com.danc.winesapi.Interfaces;
 
 import android.util.Log;
 
+import com.danc.winesapi.Models.CheckOut;
 import com.danc.winesapi.Models.LoginUser;
 import com.danc.winesapi.Models.Product;
 import com.danc.winesapi.Models.RegisterUser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -37,13 +39,16 @@ public interface ApiClient {
     @GET("api/products/")
     Call<List<Product>> getProducts();
 
+    @FormUrlEncoded
     @POST("api/checkout/")
     Call<Void> checkingOut(
-            @Field("Product") String Product,
-            @Field("User") String UserEmail,
-            @Field("Purchase Price") String purchasePrice,
-            @Field("Number of Items") String NumberOfItems
+            @Field("user") String UserEmail,
+            @Field("products") ArrayList<String> products
+
     );
+
+    @POST("api/checkout/")
+    Call<CheckOut> checkingOutOrder(@Body CheckOut checkOut);
 
 
 }

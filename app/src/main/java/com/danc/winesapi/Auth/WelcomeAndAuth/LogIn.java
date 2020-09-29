@@ -172,13 +172,11 @@ public class LogIn extends AppCompatActivity {
                 if (!response.isSuccessful()) {
                     hideDialog();
                     Toast.makeText(LogIn.this, "Failed to Sign in", Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, "onResponse: Not Signed In " + response.code());
                     return;
                 }
                 hideDialog();
-                Log.d(TAG, "onResponse: Data Values " + response.body());
                 Toast.makeText(LogIn.this, "Thank you, you're Signed in", Toast.LENGTH_SHORT).show();
-
+                sendEmail();
             }
 
             @Override
@@ -208,5 +206,12 @@ public class LogIn extends AppCompatActivity {
         if (mAuthListener != null) {
             FirebaseAuth.getInstance().removeAuthStateListener(mAuthListener);
         }
+    }
+
+    private void sendEmail(){
+        String email = edtEmail.getText().toString();
+        Intent intent = new Intent("INTENT_NAME");
+        intent.putExtra("User Email", email);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 }

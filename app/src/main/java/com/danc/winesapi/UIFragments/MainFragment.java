@@ -2,12 +2,9 @@ package com.danc.winesapi.UIFragments;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,13 +13,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.danc.winesapi.Adapter.ProductAdapter;
 import com.danc.winesapi.CartActivity;
 import com.danc.winesapi.Interfaces.ApiClient;
-import com.danc.winesapi.Interfaces.FragmentCommunication;
 import com.danc.winesapi.Models.Product;
 import com.danc.winesapi.R;
 import com.danc.winesapi.SQLite.CartItemOpenHelper;
@@ -50,6 +47,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     TextView item_count;
     LinearLayout cart;
     CartItemOpenHelper mDb;
+
+    ProgressBar mProgressBar;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -147,7 +146,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     void getAllData() {
         Cursor cursor = mDb.readAllData();
         if (cursor.getCount() == 0) {
-            Toast.makeText(getContext(), "Failed to Fetch the data", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Please Wait: ", Toast.LENGTH_SHORT).show();
 
         } else {
             while (cursor.moveToNext()) {
@@ -171,6 +170,17 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 Intent intent = new Intent(getActivity(), CartActivity.class);
                 startActivity(intent);
                 recyclerView.removeAllViewsInLayout();
+        }
+    }
+
+    private void showDialog() {
+        mProgressBar.setVisibility(View.VISIBLE);
+
+    }
+
+    private void hideDialog() {
+        if (mProgressBar.getVisibility() == View.VISIBLE) {
+            mProgressBar.setVisibility(View.INVISIBLE);
         }
     }
 };
