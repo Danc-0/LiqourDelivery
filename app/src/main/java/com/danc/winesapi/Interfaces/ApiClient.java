@@ -19,6 +19,26 @@ import retrofit2.http.POST;
 
 public interface ApiClient {
 
+    @POST("api/user/register/")
+    Call<RegisterUser> userRegistration (@Body RegisterUser registerUser);
+
+    @POST("api/user/login/")
+    Call<LoginUser> loginNewUser (@Body LoginUser loginUser);
+
+    @GET("api/products/")
+    Call<List<Product>> getProducts();
+
+    @POST("api/checkout/")
+    Call<CheckOut> checkingOutOrder(@Body CheckOut checkOut);
+
+    @FormUrlEncoded
+    @POST("api/checkout/")
+    Call<Void> checkingOut(
+            @Field("user") String UserEmail,
+            @Field("products") ArrayList<String> products
+
+    );
+
     @FormUrlEncoded
     @POST("api/user/register/")
     Call<Void> createNewUser(
@@ -29,26 +49,4 @@ public interface ApiClient {
             @Field("password") String password
 
     );
-
-    @POST("api/user/register/")
-    Call<RegisterUser> userRegistration (@Body RegisterUser registerUser);
-
-    @POST("api/user/login/")
-    Call<LoginUser> loginNewUser (@Body LoginUser loginUser);
-
-    @GET("api/products/")
-    Call<List<Product>> getProducts();
-
-    @FormUrlEncoded
-    @POST("api/checkout/")
-    Call<Void> checkingOut(
-            @Field("user") String UserEmail,
-            @Field("products") ArrayList<String> products
-
-    );
-
-    @POST("api/checkout/")
-    Call<CheckOut> checkingOutOrder(@Body CheckOut checkOut);
-
-
 }

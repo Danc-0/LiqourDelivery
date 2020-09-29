@@ -169,7 +169,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             case R.id.cart:
                 Intent intent = new Intent(getActivity(), CartActivity.class);
                 startActivity(intent);
-                recyclerView.removeAllViewsInLayout();
+//                recyclerView.removeAllViewsInLayout();
         }
     }
 

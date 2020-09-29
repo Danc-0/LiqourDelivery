@@ -25,6 +25,7 @@ import com.danc.winesapi.Mpesa.Mpesa2Activity;
 import com.danc.winesapi.SQLite.CartItemOpenHelper;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import retrofit2.Call;
@@ -43,7 +44,7 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
     String itemId;
     CartItemAdapter adapter;
 
-    TextView amount_total, amount_quantity;
+    TextView emailAddress, amount_total, amount_quantity;
     RelativeLayout proceedToCheckout;
     ArrayList<String> product;
 
@@ -64,6 +65,7 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
         description = new ArrayList<>();
         quantity = new ArrayList<>();
 
+        emailAddress = findViewById(R.id.emailAddress);
         amount_total = findViewById(R.id.amount_total);
         amount_quantity = findViewById(R.id.amount_quantity);
         proceedToCheckout = findViewById(R.id.proceed_to_checkout);
@@ -98,7 +100,7 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void onReceive(Context context, Intent intent) {
             userEmail = intent.getStringExtra("User Email");
-
+            emailAddress.setText(userEmail);
         }
     };
 
@@ -171,30 +173,41 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void productCheckOut(){
-        List<OrderProducts> products = new ArrayList<>();
-        products.add(new OrderProducts("id", "quantity"));
-        String email = "lunjalu@gmail.com";
+        Iterator<String> itemsId = id.iterator();
+        Iterator<String> itemsQuantity = quantity.iterator();
+        while (itemsQuantity.hasNext() && itemsId.hasNext()){
+            String firstHope = itemsId.next();
+            String finalQuantities = itemsQuantity.next();
 
-        CheckOut checkOut1 = new CheckOut(email, products);
+            Log.d(TAG, "productCheckOut: First Hope this Works: " + firstHope);
+            Log.d(TAG, "productCheckOut: Second Hope this works: " + finalQuantities);
 
-        Call<CheckOut> checkOut = apiClient.checkingOutOrder(checkOut1);
-        checkOut.enqueue(new Callback<CheckOut>() {
-            @Override
-            public void onResponse(Call<CheckOut> call, Response<CheckOut> response) {
-                if (!response.isSuccessful()){
-                    Log.d(TAG, "onResponse: Response Error: " + response.code());
-                    Toast.makeText(CartActivity.this, "Response Error please try again", Toast.LENGTH_SHORT).show();
-                    return;
-                } else {
-//                    launchPurchaseFragment();
-                    Toast.makeText(CartActivity.this, "Request Successful: " + response.code(), Toast.LENGTH_SHORT).show();
+            List<OrderProducts> products = new ArrayList<>();
+            products.add(new OrderProducts(firstHope, finalQuantities));
+            String email = emailAddress.getText().toString();
+            String testEmail = "dmajail@gmail.com";
+
+            CheckOut checkOut1 = new CheckOut(testEmail, products);
+
+            Call<CheckOut> checkOut = apiClient.checkingOutOrder(checkOut1);
+            checkOut.enqueue(new Callback<CheckOut>() {
+                @Override
+                public void onResponse(Call<CheckOut> call, Response<CheckOut> response) {
+                    if (!response.isSuccessful()){
+                        Log.d(TAG, "onResponse: Response Error: " + response.code());
+                        Toast.makeText(CartActivity.this, "Response Error please try again", Toast.LENGTH_SHORT).show();
+                        return;
+                    } else {
+                        launchPurchaseFragment();
+                        Toast.makeText(CartActivity.this, "Request Successful: " + response.code(), Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<CheckOut> call, Throwable t) {
-                Toast.makeText(CartActivity.this, "Failed try again: ", Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onFailure(Call<CheckOut> call, Throwable t) {
+                    Toast.makeText(CartActivity.this, "Failed try again: ", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 }
