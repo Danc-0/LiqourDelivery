@@ -36,14 +36,10 @@ import java.util.UUID;
 
 public class MpesaFragment extends AppCompatActivity implements View.OnClickListener {
 
-    //    @BindView(R.id.number)
     EditText mNumber;
-//    @BindView(R.id.amount)
-//    EditText mAmount;
-//    @BindView(R.id.button)
-            Button mButton;
-    //    @BindView(R.id.progressBar)
+    Button mButton;
     ProgressBar mLoad;
+
     private Daraja daraja;
     private Spinner UserLocation;
     EditText mAmount;
@@ -106,7 +102,6 @@ public class MpesaFragment extends AppCompatActivity implements View.OnClickList
             }
         });
 
-//        ButterKnife.bind(this);
         mButton.setOnClickListener(this);
         daraja = Daraja.with("UI6KcmK6xzknpApQGgJBqbZ9jp6uMhxi", "rSMmUhBHb8A0ogWP", new DarajaListener<AccessToken>() {
             @Override

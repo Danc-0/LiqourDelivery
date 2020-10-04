@@ -11,7 +11,6 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,11 +19,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.danc.winesapi.Adapter.CartItemAdapter;
 import com.danc.winesapi.Models.Product;
-import com.danc.winesapi.Mpesa.Mpesa2Activity;
 import com.danc.winesapi.SQLite.CartItemOpenHelper;
 import com.danc.winesapi.SQLite.ItemContractClass;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 import static com.danc.winesapi.SQLite.ItemContractClass.CartItemDetails.TABLE_NAME;
 
@@ -44,6 +45,8 @@ public class ItemActivity extends AppCompatActivity implements View.OnClickListe
     RatingBar ratingBar;
     RelativeLayout addToCart, quantityBtn;
 
+    ArrayList<String> id, quantityList;
+
     String itemId;
     String cartItemImage;
     public int count = 0;
@@ -53,11 +56,18 @@ public class ItemActivity extends AppCompatActivity implements View.OnClickListe
 
     LinearLayout cart;
     int value;
+    SQLiteDatabase mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_view_product);
+
+        CartItemOpenHelper dbHelper = new CartItemOpenHelper(this);
+        mDatabase = dbHelper.getWritableDatabase();
+
+        id = new ArrayList<>();
+        quantityList = new ArrayList<>();
 
         productImage = findViewById(R.id.image);
         numRates = findViewById(R.id.num_ratings);
@@ -84,6 +94,7 @@ public class ItemActivity extends AppCompatActivity implements View.OnClickListe
         getSelectedData();
         getAllData();
 
+        getAllItems();
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("INTENT_NAME"));
 
 
@@ -154,7 +165,7 @@ public class ItemActivity extends AppCompatActivity implements View.OnClickListe
         int totalPerItem = price * quantity;
 
         CartItemOpenHelper dbOpenHelper = new CartItemOpenHelper(ItemActivity.this);
-        SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
+        mDatabase = dbOpenHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(ItemContractClass.CartItemDetails.COLUMN_ITEM_ID, itemId);
         values.put(ItemContractClass.CartItemDetails.COLUMN_TITLE, title);
@@ -163,8 +174,10 @@ public class ItemActivity extends AppCompatActivity implements View.OnClickListe
         values.put(ItemContractClass.CartItemDetails.COLUMN_ORIGINAL_PRICE, originalPrice);
         values.put(ItemContractClass.CartItemDetails.COLUMN_QUANTITY, quantity);
         values.put(ItemContractClass.CartItemDetails.COLUMN_EACH_TOTAL, totalPerItem);
+        CartItemAdapter adapter = new CartItemAdapter(this, id, quantityList, getAllItems());
+        adapter.swapCursor(getAllItems());
 
-        long newRowID = db.insert(TABLE_NAME, null, values);
+        long newRowID = mDatabase.insert(TABLE_NAME, null, values);
 
         if (newRowID == -1) {
             return false;
@@ -175,6 +188,18 @@ public class ItemActivity extends AppCompatActivity implements View.OnClickListe
             return true;
         }
 
+    }
+
+    private Cursor getAllItems() {
+        return mDatabase.query(
+                ItemContractClass.CartItemDetails.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                ItemContractClass.CartItemDetails.COLUMN_TIMESTAMP + " DESC"
+        );
     }
 
     public void addToCounter() {
@@ -190,12 +215,10 @@ public class ItemActivity extends AppCompatActivity implements View.OnClickListe
     void getAllData() {
         Cursor cursor = mDb.readAllData();
         if (cursor.getCount() == 0) {
-            Toast.makeText(this, "Please Wait", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please Wait: ", Toast.LENGTH_SHORT).show();
 
         } else if (value == 0) {
             while (cursor.moveToNext()) {
-                Log.d(TAG, "getAllData: Number of items " + cursor.getCount());
-                Toast.makeText(this, "Number of Items " + cursor.getCount(), Toast.LENGTH_SHORT).show();
                 itemCount.setText(String.valueOf(cursor.getCount()));
             }
         }
@@ -204,6 +227,7 @@ public class ItemActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        finish();
+        Intent intent = new Intent(this, ProductActivity.class);
+        startActivity(intent);
     }
 }

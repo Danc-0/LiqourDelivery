@@ -17,6 +17,7 @@ public class ItemContractClass {
         public static final String COLUMN_ORIGINAL_PRICE = "originalPrice";
         public static final String COLUMN_QUANTITY = "quantity";
         public static final String COLUMN_EACH_TOTAL = "each_total";
+        public static final String COLUMN_TIMESTAMP = "timestamp";
 
         public static final String SQL_CREATE_TABLE =
                 "CREATE TABLE " + CartItemDetails.TABLE_NAME + " (" +
@@ -27,8 +28,9 @@ public class ItemContractClass {
                         CartItemDetails.COLUMN_PRICE + " INTEGER," +
                         CartItemDetails.COLUMN_ORIGINAL_PRICE + " INTEGER," +
                         CartItemDetails.COLUMN_QUANTITY + " INTEGER," +
-                        CartItemDetails.COLUMN_EACH_TOTAL + " INTEGER)";
-
+                        CartItemDetails.COLUMN_EACH_TOTAL + " INTEGER, " +
+                        CartItemDetails.COLUMN_TIMESTAMP + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
+                        ");";
 
         public static final String SQL_DELETE_TABLE =
                 "DROP TABLE IF EXISTS " + CartItemDetails.TABLE_NAME;

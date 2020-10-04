@@ -4,7 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -213,5 +215,24 @@ public class LogIn extends AppCompatActivity {
         Intent intent = new Intent("INTENT_NAME");
         intent.putExtra("User Email", email);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+
+        SharedPreferences sharedPref = getSharedPreferences("User_Email", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("email", email);
+        editor.apply();
+
+        Log.d(TAG, "sendEmail: Email sent: " + email);
+
+
+        // Create object of SharedPreferences.
+//        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+//        //now get Editor
+//        SharedPreferences.Editor editor = sharedPref.edit();
+//        //put your value
+//        editor.putString("userEmail", email);
+//
+//        //commits your edits
+//        editor.commit();
+
     }
 }

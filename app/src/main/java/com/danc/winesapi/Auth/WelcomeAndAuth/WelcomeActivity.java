@@ -38,7 +38,7 @@ public class WelcomeActivity extends AppCompatActivity {
         // Checking for first time launch - before calling setContentView()
         prefManager = new PrefManager(this);
         if (!prefManager.isFirstTimeLaunch()) {
-            launchHomeScreen();
+            launchRegisterScreen();
             finish();
         }
 
@@ -78,24 +78,10 @@ public class WelcomeActivity extends AppCompatActivity {
         btnSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                launchHomeScreen();
+                launchRegisterScreen();
             }
         });
 
-//        btnNext.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // checking for last page
-//                // if last page home screen will be launched
-//                int current = getItem(+1);
-//                if (current < layouts.length) {
-//                    // move to next screen
-//                    viewPager.setCurrentItem(current);
-//                } else {
-//                    launchSignInScreen();
-//                }
-//            }
-//        });
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,7 +119,7 @@ public class WelcomeActivity extends AppCompatActivity {
         return viewPager.getCurrentItem() + i;
     }
 
-    private void launchHomeScreen() {
+    private void launchRegisterScreen() {
         prefManager.setFirstTimeLaunch(false);
         startActivity(new Intent(WelcomeActivity.this, Register.class));
         finish();
@@ -162,7 +148,8 @@ public class WelcomeActivity extends AppCompatActivity {
                 // still pages are left
 //                btnNext.setText(getString(R.string.next));
                 btnSignUp.setVisibility(View.VISIBLE);
-                btnSignUp.setText(getString(R.string.end));
+                btnSignUp.setText(getString(R.string.next));
+
             }
         }
 

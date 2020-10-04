@@ -4,8 +4,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -14,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,8 +25,10 @@ import com.danc.winesapi.Adapter.CartItemAdapter;
 import com.danc.winesapi.Interfaces.ApiClient;
 import com.danc.winesapi.Models.CheckOut;
 import com.danc.winesapi.Models.OrderProducts;
-import com.danc.winesapi.Mpesa.Mpesa2Activity;
+import com.danc.winesapi.Mpesa.MpesaActivity;
+import com.danc.winesapi.Mpesa.MpesaActivity;
 import com.danc.winesapi.SQLite.CartItemOpenHelper;
+import com.danc.winesapi.SQLite.ItemContractClass;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -40,32 +46,32 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
     RecyclerView recyclerView;
 
     CartItemOpenHelper mDb;
-    ArrayList<String> id, title, images, price, description, quantity;
+    ArrayList<String> id, quantity;
     String itemId;
     CartItemAdapter adapter;
+    private SQLiteDatabase mDatabase;
 
     TextView emailAddress, amount_total, amount_quantity;
     RelativeLayout proceedToCheckout;
     ArrayList<String> product;
 
-    String userEmail;
     ApiClient apiClient;
 
+    String userEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_view_cart);
 
+        CartItemOpenHelper dbHelper = new CartItemOpenHelper(this);
+        mDatabase = dbHelper.getWritableDatabase();
+
         mDb = new CartItemOpenHelper(this);
         id = new ArrayList<>();
-        title = new ArrayList<>();
-        images = new ArrayList<>();
-        price = new ArrayList<>();
-        description = new ArrayList<>();
         quantity = new ArrayList<>();
 
-        emailAddress = findViewById(R.id.emailAddress);
+        emailAddress = findViewById(R.id.email);
         amount_total = findViewById(R.id.amount_total);
         amount_quantity = findViewById(R.id.amount_quantity);
         proceedToCheckout = findViewById(R.id.proceed_to_checkout);
@@ -78,13 +84,33 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new CartItemAdapter(this, id, title, images, price, description, quantity);
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                removeItem((long) viewHolder.itemView.getTag());
+                adapter.notifyDataSetChanged();
+                adapter.swapCursor(getAllItems());
+            }
+        }).attachToRecyclerView(recyclerView);
+
+
+        adapter = new CartItemAdapter(this, id, quantity, getAllItems());
         recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+        adapter.swapCursor(getAllItems());
 
-        Log.d(TAG, "onCreate: Adapter details: " + adapter);
         getPriceTotals();
+        getQuantityTotals();
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("INTENT_NAME"));
+
+
+//        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("INTENT_NAME"));
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(getString(R.string.base_url))
@@ -96,62 +122,75 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            userEmail = intent.getStringExtra("User Email");
-            emailAddress.setText(userEmail);
-        }
-    };
+//    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            String userEmail = intent.getStringExtra("User Email");
+//            emailAddress.setText(userEmail);
+//            Log.d(TAG, "onReceive: Email received: " + userEmail);
+//            Log.d(TAG, "onReceive: Email received on tv: " + emailAddress.getText().toString());
+//        }
+//    };
+
+    private void removeItem(long id) {
+        mDatabase.delete(ItemContractClass.CartItemDetails.TABLE_NAME,
+                ItemContractClass.CartItemDetails._ID + "=" + id, null);
+        adapter.swapCursor(getAllItems());
+    }
+
+    private Cursor getAllItems() {
+        return mDatabase.query(
+                ItemContractClass.CartItemDetails.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                ItemContractClass.CartItemDetails.COLUMN_TIMESTAMP + " DESC"
+        );
+    }
 
     void getAllData() {
         Cursor cursor = mDb.readAllData();
         if (cursor.getCount() == 0) {
             Toast.makeText(this, "Please wait: ", Toast.LENGTH_SHORT).show();
 
-
         } else {
             while (cursor.moveToNext()) {
-                getQuantityTotals();
+
                 id.add(cursor.getString(1));
-                title.add(cursor.getString(2));
-                images.add(cursor.getString(3));
-                price.add(cursor.getString(4));
-                description.add(cursor.getString(5));
                 quantity.add(cursor.getString(6));
 
-                Log.d(TAG, "getAllData: I want this data: " + id);
-                Log.d(TAG, "getAllData: I want this data set: " + quantity);
+                getPriceTotals();
+                getQuantityTotals();
 
             }
         }
     }
 
-    int getPriceTotals() {
+    public Cursor getPriceTotals() {
         Cursor cursor = mDb.calculatePriceTotals();
         int total = 0;
         if (cursor.moveToFirst()) {
             total = cursor.getInt(cursor.getColumnIndex("Total"));
-            Log.d(TAG, "getTotals: TotalValue " + total);
-
             amount_total.setText(String.valueOf(total));
         } else {
             amount_total.setVisibility(View.INVISIBLE);
         }
-        return total;
+        return cursor;
     }
 
-    int getQuantityTotals() {
+    public Cursor getQuantityTotals() {
         Cursor cursor = mDb.calculateQuantityTotals();
         int total = 0;
         if (cursor.moveToFirst()) {
             total = cursor.getInt(cursor.getColumnIndex("Total"));
-            Log.d(TAG, "getTotals: TotalValue " + total);
             amount_quantity.setText(String.valueOf(total));
         } else {
             amount_quantity.setVisibility(View.INVISIBLE);
+
         }
-        return total;
+        return cursor;
     }
 
     @Override
@@ -159,46 +198,45 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()) {
             case R.id.proceed_to_checkout:
                 productCheckOut();
+                launchPurchaseFragment();
                 break;
         }
     }
 
     private void launchPurchaseFragment() {
         String Amount = amount_total.getText().toString();
-        Intent intent = new Intent(this, Mpesa2Activity.class);
+        Intent intent = new Intent(this, MpesaActivity.class);
         intent.putExtra("Amount", Amount);
         startActivity(intent);
         finish();
 
     }
 
-    public void productCheckOut(){
+    public void productCheckOut() {
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("User_Email", Context.MODE_PRIVATE);
+        String email  =sharedPreferences.getString("email", "");
+
         Iterator<String> itemsId = id.iterator();
         Iterator<String> itemsQuantity = quantity.iterator();
-        while (itemsQuantity.hasNext() && itemsId.hasNext()){
+        while (itemsQuantity.hasNext() && itemsId.hasNext()) {
             String firstHope = itemsId.next();
             String finalQuantities = itemsQuantity.next();
 
-            Log.d(TAG, "productCheckOut: First Hope this Works: " + firstHope);
-            Log.d(TAG, "productCheckOut: Second Hope this works: " + finalQuantities);
-
             List<OrderProducts> products = new ArrayList<>();
             products.add(new OrderProducts(firstHope, finalQuantities));
-            String email = emailAddress.getText().toString();
-            String testEmail = "dmajail@gmail.com";
 
-            CheckOut checkOut1 = new CheckOut(testEmail, products);
+            CheckOut checkOut1 = new CheckOut(email, products);
 
             Call<CheckOut> checkOut = apiClient.checkingOutOrder(checkOut1);
             checkOut.enqueue(new Callback<CheckOut>() {
                 @Override
                 public void onResponse(Call<CheckOut> call, Response<CheckOut> response) {
-                    if (!response.isSuccessful()){
+                    if (!response.isSuccessful()) {
                         Log.d(TAG, "onResponse: Response Error: " + response.code());
                         Toast.makeText(CartActivity.this, "Response Error please try again", Toast.LENGTH_SHORT).show();
                         return;
                     } else {
-                        launchPurchaseFragment();
+                        Toast.makeText(CartActivity.this, "Successful Checkout Data Sent", Toast.LENGTH_SHORT).show();
                         Toast.makeText(CartActivity.this, "Request Successful: " + response.code(), Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -209,5 +247,12 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
                 }
             });
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getQuantityTotals();
+        getPriceTotals();
     }
 }

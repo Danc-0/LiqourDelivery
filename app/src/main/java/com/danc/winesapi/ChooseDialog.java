@@ -50,9 +50,6 @@ public class ChooseDialog extends DialogFragment implements View.OnClickListener
     public AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Log.d(TAG, "onItemClick: ClickedItem " + parent.getItemAtPosition(position));
-            Toast.makeText(view.getContext(), "ItemClicked " + parent.getItemAtPosition(position), Toast.LENGTH_SHORT).show();
-
             String positionItem = (String) parent.getItemAtPosition(position);
             Intent intent = new Intent("INTENT_NAME");
             intent.putExtra("Item Position", positionItem);

@@ -12,10 +12,13 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.danc.winesapi.Adapter.ProductAdapter;
 import com.danc.winesapi.Interfaces.ApiClient;
@@ -24,6 +27,7 @@ import com.danc.winesapi.SQLite.CartItemOpenHelper;
 import com.danc.winesapi.UIFragments.MainFragment;
 
 import java.util.List;
+import java.util.zip.Inflater;
 
 import retrofit2.Retrofit;
 
@@ -49,8 +53,6 @@ public class ProductActivity extends AppCompatActivity implements View.OnClickLi
         mDb = new CartItemOpenHelper(this);
 
         init();
-//        getAllData();
-
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("INTENT_NAME"));
 
     }
@@ -73,24 +75,8 @@ public class ProductActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onResume() {
         super.onResume();
-//        getAllData();
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("INTENT_NAME"));
     }
-
-//    void getAllData() {
-//        Cursor cursor = mDb.readAllData();
-//        if (cursor.getCount() == 0) {
-////            item_count.setVisibility(View.INVISIBLE);
-//            Toast.makeText(this, "Failed to Fetch the data", Toast.LENGTH_SHORT).show();
-//
-//        } else {
-//            while (cursor.moveToNext()) {
-//                Log.d(TAG, "getAllData: Number of items " + cursor.getCount());
-//                Toast.makeText(this, "Number of Items " + cursor.getCount(), Toast.LENGTH_SHORT).show();
-//                item_count.setText(String.valueOf(cursor.getCount()));
-//            }
-//        }
-//    }
 
     @Override
     public void onClick(View view) {
@@ -101,5 +87,4 @@ public class ProductActivity extends AppCompatActivity implements View.OnClickLi
             break;
         }
     }
-
 }

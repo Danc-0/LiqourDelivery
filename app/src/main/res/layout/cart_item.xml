@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
+    android:layout_margin="2dp"
+    app:cardCornerRadius="25dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/grey_border_bottom">
+    android:background="@drawable/grey_border_bottom" >
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <RelativeLayout
         android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/adjust_quantities"
-        android:padding="10dp">
+        android:padding="5dp">
 
         <ImageView
             android:layout_width="80dp"
@@ -38,7 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="5dp"
                 >
 
                 <TextView
@@ -99,6 +104,7 @@
                     android:layout_weight="0.27"
                     android:layout_height="wrap_content"
                     android:text="id"
+                    android:visibility="gone"
                     android:textColor="@color/Black"
                     android:textSize="15sp"
                     android:layout_marginTop="5dp"
@@ -124,52 +130,53 @@
         android:orientation="vertical"
         android:layout_marginEnd="5dp">
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:id="@+id/delete_item"
-            android:background="@drawable/grey_rounded_button">
+<!--        <RelativeLayout-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:padding="10dp"-->
+<!--            android:id="@+id/delete_item"-->
+<!--            android:background="@drawable/grey_rounded_button">-->
 
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/delete"/>
+<!--            <ImageView-->
+<!--                android:layout_width="20dp"-->
+<!--                android:layout_height="20dp"-->
+<!--                android:src="@drawable/delete"/>-->
 
-        </RelativeLayout>
+<!--        </RelativeLayout>-->
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:layout_marginTop="2dp"
-            android:id="@+id/increase_quantity"
-            android:background="@drawable/grey_rounded_button">
+<!--        <RelativeLayout-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:padding="10dp"-->
+<!--            android:id="@+id/increase_quantity"-->
+<!--            android:background="@drawable/grey_rounded_button">-->
 
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_up_arrow_black"/>
+<!--            <ImageView-->
+<!--                android:layout_width="20dp"-->
+<!--                android:layout_height="20dp"-->
+<!--                android:src="@drawable/ic_up_arrow_black"/>-->
 
-        </RelativeLayout>
+<!--        </RelativeLayout>-->
 
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:id="@+id/decrease_quantity"
-            android:background="@drawable/grey_rounded_button"
-            android:layout_marginTop="5dp">
+<!--        <RelativeLayout-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:padding="10dp"-->
+<!--            android:id="@+id/decrease_quantity"-->
+<!--            android:background="@drawable/grey_rounded_button"-->
+<!--            android:layout_marginTop="5dp">-->
 
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_down_arrow_black"/>
+<!--            <ImageView-->
+<!--                android:layout_width="20dp"-->
+<!--                android:layout_height="20dp"-->
+<!--                android:src="@drawable/ic_down_arrow_black"/>-->
 
-        </RelativeLayout>
+<!--        </RelativeLayout>-->
 
 
     </LinearLayout>
 
 </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

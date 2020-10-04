@@ -13,7 +13,7 @@ public class CartItemOpenHelper extends SQLiteOpenHelper {
 
     private static final String TAG = "CartItemOpenHelper";
     public static final String DATABASE_NAME = "CartItems.db";
-    public static final int DATABASE_VERSION = 6;
+    public static final int DATABASE_VERSION = 10;
     Context context;
 
     public CartItemOpenHelper(@Nullable Context context) {
@@ -70,12 +70,13 @@ public class CartItemOpenHelper extends SQLiteOpenHelper {
 
     public void deleteOneRow(String row_id) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        long result = sqLiteDatabase.delete(ItemContractClass.CartItemDetails.TABLE_NAME, "_id=?", new String[]{row_id});
+        long result = sqLiteDatabase.delete(ItemContractClass.CartItemDetails.TABLE_NAME, ItemContractClass.CartItemDetails.COLUMN_ITEM_ID + "=?", new String[]{row_id});
 
         if (result == -1) {
             Log.d(TAG, "deleteOneRow: Failed to Delete");
 
         } else {
+            sqLiteDatabase.close();
             Log.d(TAG, "deleteOneRow: Successfully deleted");
 
         }

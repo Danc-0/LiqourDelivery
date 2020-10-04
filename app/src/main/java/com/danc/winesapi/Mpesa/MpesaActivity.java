@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,8 +41,9 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class Mpesa2Activity extends AppCompatActivity {
+public class MpesaActivity extends AppCompatActivity {
 
+    private static final String TAG = "MpesaActivity";
     private static String amount, phone;
     private static String spinnertext;
     private static Context context;
@@ -120,6 +122,7 @@ public class Mpesa2Activity extends AppCompatActivity {
                 User td = dataSnapshot.getValue(User.class);
                 FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                 if (firebaseUser != null) {
+                    Log.d(TAG, "onChildAdded: Phone Number: " + td.getPhoneNumber());
                     EditText mNumber = findViewById(R.id.edt_phone);
                     mNumber.setText(td.getPhoneNumber());
                 }
@@ -156,7 +159,7 @@ public class Mpesa2Activity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                Toast.makeText(Mpesa2Activity.this, "Please choose your nearest pick up point", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MpesaActivity.this, "Please choose your nearest pick up point", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -316,7 +319,7 @@ public class Mpesa2Activity extends AppCompatActivity {
      */
     public void pay(View view) {
 
-        progressDialog = new ProgressDialog(Mpesa2Activity.this);
+        progressDialog = new ProgressDialog(MpesaActivity.this);
 
         Spinner spinner = findViewById(R.id.spinner);
         spinnertext = spinner.getSelectedItem().toString();
@@ -333,7 +336,7 @@ public class Mpesa2Activity extends AppCompatActivity {
 
         if (!edtPhone.getText().toString().isEmpty()
                 && !edtAmount.getText().toString().isEmpty()
-                && Utils.isNetworkAvailable(Mpesa2Activity.this)
+                && Utils.isNetworkAvailable(MpesaActivity.this)
                 && Utils.sanitizePhoneNumber(edtPhone.getText().toString()) != null) {
 
 
@@ -354,15 +357,15 @@ public class Mpesa2Activity extends AppCompatActivity {
             amount = edtAmount.getText().toString();
 
 
-            context = Mpesa2Activity.this;
-            new AuthService(Mpesa2Activity.this).execute(url, oAuth.getOauth());
+            context = MpesaActivity.this;
+            new AuthService(MpesaActivity.this).execute(url, oAuth.getOauth());
 
 
         } else {
             if (progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
-            Toast.makeText(Mpesa2Activity.this, "Fill required fields || have internet on || Use a correct phone number", Toast.LENGTH_LONG).show();
+            Toast.makeText(MpesaActivity.this, "Fill required fields || have internet on || Use a correct phone number", Toast.LENGTH_LONG).show();
         }
 
     }
@@ -406,5 +409,11 @@ public class Mpesa2Activity extends AppCompatActivity {
                 Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

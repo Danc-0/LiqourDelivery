@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".Mpesa.Mpesa2Activity"
+    tools:context=".Mpesa.MpesaActivity"
     android:padding="16dp"
     tools:showIn="@layout/activity_mpesa2">
 
@@ -109,6 +109,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:ems="10"
+            android:enabled="false"
             android:layout_marginTop="5dp"
             android:hint="Total Amount"
             android:background="@drawable/bg_gray"
