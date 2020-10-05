@@ -57,7 +57,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:textColor="@color/red2"
-                    android:text="100"
+                    android:text="0"
                     android:id="@+id/price"/>
 
                 <TextView
@@ -92,7 +92,7 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:id="@+id/quantity"
-                    android:text="15"
+                    android:text="0"
                     android:textColor="@color/Black"
                     android:textSize="15sp"
                     android:layout_marginTop="5dp"

@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/sign_up_background"
-    android:gravity="center"
-    tools:context=".WelcomeAndAuth.SignUp">
+    android:gravity="center">
 
     <ProgressBar
         android:id="@+id/mProgressBar"

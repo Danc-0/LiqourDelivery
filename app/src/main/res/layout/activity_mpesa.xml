@@ -1,39 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:layout_gravity="center"
-    android:paddingTop="50dp"
-    android:gravity="center"
     tools:context=".Mpesa.MpesaActivity">
 
+    <include layout="@layout/content_main" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:inputType="phone"
-        android:layout_margin="10dp"
-        android:id="@+id/phone"
-        android:hint="Your Phone Number"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:inputType="number"
-        android:id="@+id/amount"
-        android:text="1"
-        android:layout_margin="10dp"
-        android:hint="Amount"
-        android:layout_height="50dp" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:layout_width="match_parent"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Pay"
-        android:background="@color/colorAccent"
-        android:id="@+id/pay"
-        android:layout_margin="10dp" />
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:visibility="gone"
+        app:srcCompat="@android:drawable/ic_dialog_email" />
 
-</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

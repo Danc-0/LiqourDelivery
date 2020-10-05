@@ -1,10 +1,6 @@
 package com.danc.winesapi.UIFragments;
 
-import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +9,10 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+
 import com.danc.winesapi.Models.Product;
 import com.danc.winesapi.R;
-import com.squareup.picasso.Picasso;
 
 /**
  * A simple {@link Fragment} subclass.

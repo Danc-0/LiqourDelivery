@@ -1,17 +1,12 @@
 package com.danc.winesapi.Adapter;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,7 +22,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartVi
 
     private static final String TAG = "CartItemAdapter";
     private Context context;
-    private ArrayList<String> id, productTitle, imageUrl, productPrice, originalPrice, productQuantity;
+    private ArrayList<String> id, productQuantity;
 
     private Context mContext;
     private Cursor mCursor;

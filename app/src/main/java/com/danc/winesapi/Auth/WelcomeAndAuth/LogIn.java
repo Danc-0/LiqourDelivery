@@ -212,10 +212,6 @@ public class LogIn extends AppCompatActivity {
 
     private void sendEmail(){
         String email = edtEmail.getText().toString();
-        Intent intent = new Intent("INTENT_NAME");
-        intent.putExtra("User Email", email);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-
         SharedPreferences sharedPref = getSharedPreferences("User_Email", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("email", email);
@@ -224,15 +220,6 @@ public class LogIn extends AppCompatActivity {
         Log.d(TAG, "sendEmail: Email sent: " + email);
 
 
-        // Create object of SharedPreferences.
-//        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-//        //now get Editor
-//        SharedPreferences.Editor editor = sharedPref.edit();
-//        //put your value
-//        editor.putString("userEmail", email);
-//
-//        //commits your edits
-//        editor.commit();
 
     }
 }

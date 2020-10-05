@@ -244,9 +244,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
-            android:text="0"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
+            android:visibility="gone"
             android:textColor="@color/Black"
             android:textSize="14sp" />
 

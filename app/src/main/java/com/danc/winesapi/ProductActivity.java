@@ -1,35 +1,21 @@
 package com.danc.winesapi;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.database.Cursor;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.Toolbar;
-
-import com.danc.winesapi.Adapter.ProductAdapter;
-import com.danc.winesapi.Interfaces.ApiClient;
-import com.danc.winesapi.Models.Product;
 import com.danc.winesapi.SQLite.CartItemOpenHelper;
 import com.danc.winesapi.UIFragments.MainFragment;
-
-import java.util.List;
-import java.util.zip.Inflater;
-
-import retrofit2.Retrofit;
 
 public class ProductActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "MainActivity";

@@ -1,7 +1,5 @@
 package com.danc.winesapi.Interfaces;
 
-import android.util.Log;
-
 import com.danc.winesapi.Models.CheckOut;
 import com.danc.winesapi.Models.LoginUser;
 import com.danc.winesapi.Models.Product;

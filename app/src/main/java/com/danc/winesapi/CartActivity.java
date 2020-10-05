@@ -109,9 +109,6 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
         getQuantityTotals();
 
 
-
-//        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("INTENT_NAME"));
-
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(getString(R.string.base_url))
                 .addConverterFactory(GsonConverterFactory.create())
@@ -121,16 +118,6 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
 
 
     }
-
-//    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            String userEmail = intent.getStringExtra("User Email");
-//            emailAddress.setText(userEmail);
-//            Log.d(TAG, "onReceive: Email received: " + userEmail);
-//            Log.d(TAG, "onReceive: Email received on tv: " + emailAddress.getText().toString());
-//        }
-//    };
 
     private void removeItem(long id) {
         mDatabase.delete(ItemContractClass.CartItemDetails.TABLE_NAME,
@@ -232,12 +219,10 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
                 @Override
                 public void onResponse(Call<CheckOut> call, Response<CheckOut> response) {
                     if (!response.isSuccessful()) {
-                        Log.d(TAG, "onResponse: Response Error: " + response.code());
-                        Toast.makeText(CartActivity.this, "Response Error please try again", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CartActivity.this, "Error please try again", Toast.LENGTH_SHORT).show();
                         return;
                     } else {
-                        Toast.makeText(CartActivity.this, "Successful Checkout Data Sent", Toast.LENGTH_SHORT).show();
-                        Toast.makeText(CartActivity.this, "Request Successful: " + response.code(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CartActivity.this, "Proceed to Pay", Toast.LENGTH_SHORT).show();
                     }
                 }
 
