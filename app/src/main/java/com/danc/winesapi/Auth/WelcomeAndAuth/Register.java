@@ -73,7 +73,7 @@ public class Register extends AppCompatActivity {
         mDatabaseReference = mFirebaseDatabase.getReference().child("Users");
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.0.12:8000/")
+                .baseUrl(getString(R.string.base_url))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -177,7 +177,6 @@ public class Register extends AppCompatActivity {
 
                         if (task.isSuccessful()) {
                             FirebaseAuth.getInstance().signOut();
-                            //redirect the user to the login screen
                             getNewUser();
 
                         } else {
@@ -207,11 +206,11 @@ public class Register extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task task) {
                     if (task.isSuccessful()) {
-                        Toast.makeText(Register.this, "Profile Saved", Toast.LENGTH_SHORT).show();
+                        getNewUser();
 
                     } else {
-                        Toast.makeText(Register.this, "Check Your Network", Toast.LENGTH_SHORT).show();
-                        getNewUser();
+                        Toast.makeText(Register.this, "Check Your Details", Toast.LENGTH_SHORT).show();
+                        hideDialog();
                     }
                 }
             });
@@ -266,8 +265,6 @@ public class Register extends AppCompatActivity {
     }
 
     private void setupFirebaseAuth() {
-        Log.d(TAG, "setupFirebaseAuth: started.");
-
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {

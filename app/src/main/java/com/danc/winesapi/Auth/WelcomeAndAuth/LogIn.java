@@ -66,7 +66,7 @@ public class LogIn extends AppCompatActivity {
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("INTENT_NAME"));
 
         retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.0.12:8000/")
+                .baseUrl(getString(R.string.base_url))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -143,8 +143,6 @@ public class LogIn extends AppCompatActivity {
     }
 
     private void setupFirebaseAuth() {
-        Log.d(TAG, "setupFirebaseAuth: started.");
-
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -155,6 +153,9 @@ public class LogIn extends AppCompatActivity {
                     startActivity(intent);
                     finish();
 
+                }
+                else {
+                        Toast.makeText(LogIn.this, "Register first", Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -177,8 +178,8 @@ public class LogIn extends AppCompatActivity {
                     return;
                 }
                 hideDialog();
-                Toast.makeText(LogIn.this, "Thank you, you're Signed in", Toast.LENGTH_SHORT).show();
                 sendEmail();
+
             }
 
             @Override
@@ -216,10 +217,6 @@ public class LogIn extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("email", email);
         editor.apply();
-
-        Log.d(TAG, "sendEmail: Email sent: " + email);
-
-
 
     }
 }

@@ -106,6 +106,6 @@
     <string name="description">Description</string>
     <string name="original_price">Original Price}</string>
     <string name="title">Title</string>
-    <string name="base_url">http://192.168.0.12:8000</string>
+    <string name="base_url">http://192.168.43.60:8000</string>
 
 </resources>
