@@ -58,7 +58,7 @@
         venenatis, magna odio volutpat velit, at ullamcorper nulla lacus sed turpis. Pellentesque
         vitae metus elit, nec tincidunt tellus. Integer sed nisl sem, ullamcorper ornare lacus. Duis
         ac mauris sed massa congue volutpat. Donec sed erat sit amet turpis viverra rhoncus sit amet
-        nec magna. Donec lacinia ligula at libero volutpat volutpat nec nec tortor.
+        nec magna. Donec lacinia ligula at libero  volutpat nec tortor.
     </string>
     <string name="share">Share</string>
     <string name="enter_transaction_details_to_complete">Enter Transaction Details to Complete</string>
@@ -106,6 +106,7 @@
     <string name="description">Description</string>
     <string name="original_price">Original Price}</string>
     <string name="title">Title</string>
-    <string name="base_url">http://192.168.43.60:8000</string>
+<!--    <string name="base_url">http://192.168.43.60:8000</string>-->
+    <string name="base_url">http://192.168.43.211:8000</string>
 
 </resources>
